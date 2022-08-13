@@ -11,8 +11,10 @@ let package = Package(
     products: [
         .library(name: "AppKit", targets: ["AppKit"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "AppUI", targets: ["AppUI"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
     ],
     targets: [
         .target(
@@ -22,6 +24,15 @@ let package = Package(
             ]),
         .target(
             name: "AppFeature"
+        ),
+        .target(
+            name: "AppUI",
+            resources: [
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
+            ]
         ),
     ]
 )
