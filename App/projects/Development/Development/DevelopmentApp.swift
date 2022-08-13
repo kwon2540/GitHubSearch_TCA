@@ -6,12 +6,8 @@
 //
 
 import SwiftUI
+import AppKit
 
 @main
-struct DevelopmentApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+struct DevelopmentApp: AppKit.App {
 }

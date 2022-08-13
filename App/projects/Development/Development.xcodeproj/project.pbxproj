@@ -11,6 +11,7 @@
 		336F6A9728A7432900F07000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336F6A9628A7432900F07000 /* ContentView.swift */; };
 		336F6A9928A7432A00F07000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 336F6A9828A7432A00F07000 /* Assets.xcassets */; };
 		336F6A9C28A7432A00F07000 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 336F6A9B28A7432A00F07000 /* Preview Assets.xcassets */; };
+		336F6AA428A7455200F07000 /* AppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 336F6AA328A7455200F07000 /* AppKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				336F6AA428A7455200F07000 /* AppKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -37,6 +39,7 @@
 			children = (
 				336F6A9328A7432900F07000 /* Development */,
 				336F6A9228A7432900F07000 /* Products */,
+				336F6AA228A7455200F07000 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +70,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		336F6AA228A7455200F07000 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,6 +93,9 @@
 			dependencies = (
 			);
 			name = Development;
+			packageProductDependencies = (
+				336F6AA328A7455200F07000 /* AppKit */,
+			);
 			productName = Development;
 			productReference = 336F6A9128A7432900F07000 /* Development.app */;
 			productType = "com.apple.product-type.application";
@@ -337,6 +350,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		336F6AA328A7455200F07000 /* AppKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 336F6A8928A7432900F07000 /* Project object */;
 }
