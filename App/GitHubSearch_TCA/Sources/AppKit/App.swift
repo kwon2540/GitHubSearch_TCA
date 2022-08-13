@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppFeature
 
 public protocol App: SwiftUI.App {
 }
@@ -13,7 +14,7 @@ public protocol App: SwiftUI.App {
 extension App {
     public var body: some Scene {
         WindowGroup {
-            EmptyView()
+            RootView()
         }
     }
 }
