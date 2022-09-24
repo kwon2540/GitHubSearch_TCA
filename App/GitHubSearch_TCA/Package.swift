@@ -16,6 +16,7 @@ let package = Package(
     ],
     dependencies: [
 //        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.40.2"),
     ],
     targets: [
         .target(
@@ -39,6 +40,7 @@ let package = Package(
             name: "SearchFeature",
             dependencies: [
                 "AppUI",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]),
     ]
 )
