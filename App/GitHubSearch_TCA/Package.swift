@@ -15,7 +15,7 @@ let package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
+//        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
     ],
     targets: [
         .target(
@@ -32,7 +32,7 @@ let package = Package(
                 .process("Resources"),
             ],
             plugins: [
-                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
+//                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
             ]
         ),
         .target(
