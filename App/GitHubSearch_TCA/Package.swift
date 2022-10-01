@@ -25,8 +25,10 @@ let package = Package(
                 "AppFeature",
             ]),
         .target(
-            name: "AppFeature"
-        ),
+            name: "AppFeature",
+            dependencies: [
+                "SearchFeature",
+            ]),
         .target(
             name: "AppUI",
             resources: [
