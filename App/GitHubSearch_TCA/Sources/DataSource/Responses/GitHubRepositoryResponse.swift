@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GitHubRepositoryModel: Decodable, Identifiable {
+public struct GitHubRepositoryResponse: Decodable, Identifiable {
 
     public let id: String
     let name: String
@@ -30,7 +30,7 @@ public struct GitHubRepositoryModel: Decodable, Identifiable {
     }
 
     static let dummy = [
-        GitHubRepositoryModel(id: "1",
+        GitHubRepositoryResponse(id: "1",
                               name: "Swift",
                               fullName: "maharjan binish",
                               owner: GitHubRepositoryOwnerModel(id: "1", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
@@ -38,7 +38,7 @@ public struct GitHubRepositoryModel: Decodable, Identifiable {
                               description: "description",
                               language: "swift",
                               stargazersCount: "1000"),
-        GitHubRepositoryModel(id: "2",
+        GitHubRepositoryResponse(id: "2",
                               name: "Java",
                               fullName: "kwon junhyeok",
                               owner: GitHubRepositoryOwnerModel(id: "2", login: "kwon junhyeok", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
@@ -46,7 +46,7 @@ public struct GitHubRepositoryModel: Decodable, Identifiable {
                               description: "description",
                               language: "Java",
                               stargazersCount: "1000"),
-        GitHubRepositoryModel(id: "3",
+        GitHubRepositoryResponse(id: "3",
                               name: "kotlin",
                               fullName: "maharjan binish",
                               owner: GitHubRepositoryOwnerModel(id: "3", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
@@ -58,8 +58,9 @@ public struct GitHubRepositoryModel: Decodable, Identifiable {
     ]
 }
 
-extension GitHubRepositoryModel: Equatable {
-    public static func == (lhs: GitHubRepositoryModel, rhs: GitHubRepositoryModel) -> Bool {
+extension GitHubRepositoryResponse: Equatable {
+    
+    public static func == (lhs: GitHubRepositoryResponse, rhs: GitHubRepositoryResponse) -> Bool {
         lhs.id == rhs.id
     }
 }
