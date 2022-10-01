@@ -5,28 +5,40 @@
 //  Created by クォン ジュンヒョク on 2022/08/20.
 //
 
+import ComposableArchitecture
 import SwiftUI
 
-struct ListView: View {
+public struct ListView: View {
+
+    public init(store: Store<ListState, ListAction>) {
+        self.store = store
+    }
+
+    let store: Store<ListState, ListAction>
     
-    @State var repositoryList: [GitHubRepositoryModel]
-    @State var keyword: String
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            SearchBar(keyword: $keyword)
-            
-            ForEach(repositoryList) { repository in
-                ListItem(imageUrl: repository.owner.avatarUrl,
-                         title: repository.name,
-                         userName: repository.owner.login,
-                         language: repository.language ?? "",
-                         stargazersCount: repository.stargazersCount)
+    public var body: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            VStack(spacing: 16) {
+                SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
+
+                ForEach(viewStore.repositoryList) { repository in
+                    ListItem(imageUrl: repository.owner.avatarUrl,
+                             title: repository.name,
+                             userName: repository.owner.login,
+                             language: repository.language ?? "",
+                             stargazersCount: repository.stargazersCount)
+                }
+
+                Spacer()
             }
-            
-            Spacer()
+            .padding(16)
+            .background {
+                if viewStore.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
+            }
         }
-        .padding(16)
     }
 }
 
@@ -112,38 +124,13 @@ struct ListView_Previews: PreviewProvider {
     }
     
     private struct Preview: View {
-        @State var repositoryList: [GitHubRepositoryModel] = {
-            [GitHubRepositoryModel(id: "1",
-                                   name: "Swift",
-                                   fullName: "maharjan binish",
-                                   owner: GitHubRepositoryOwnerModel(id: "1", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
-                                   htmlUrl: URL(string: "https:www.google.com")!,
-                                   description: "description",
-                                   language: "swift",
-                                   stargazersCount: "1000"),
-             GitHubRepositoryModel(id: "2",
-                                    name: "Java",
-                                    fullName: "kwon junhyeok",
-                                    owner: GitHubRepositoryOwnerModel(id: "2", login: "kwon junhyeok", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
-                                    htmlUrl: URL(string: "https:www.google.com")!,
-                                    description: "description",
-                                    language: "Java",
-                                    stargazersCount: "1000"),
-             GitHubRepositoryModel(id: "3",
-                                    name: "kotlin",
-                                    fullName: "maharjan binish",
-                                    owner: GitHubRepositoryOwnerModel(id: "3", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
-                                    htmlUrl: URL(string: "https:www.google.com")!,
-                                    description: "description",
-                                    language: "kotlin",
-                                    stargazersCount: "1000"),
-             
-            ]
-        }()
+        @State var repositoryList = GitHubRepositoryModel.dummy
         @State var keyword = ""
         
         var body: some View {
-            ListView(repositoryList: repositoryList, keyword: keyword)
+            ListView(store: Store(initialState: .init(),
+                                  reducer: listReducer,
+                                  environment: .init()))
         }
     }
 }
