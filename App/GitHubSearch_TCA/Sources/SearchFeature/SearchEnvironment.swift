@@ -5,13 +5,14 @@
 //  Created by クォン ジュンヒョク on 2022/10/01.
 //
 
+import DataSource
 import Foundation
 
 public struct SearchEnvironment {
-    public init() {}
 
-    var repositoryList: (_ keyword: String) async throws -> [GitHubRepositoryModel] = { _ in
-        try await Task.sleep(nanoseconds: NSEC_PER_SEC)
-        return GitHubRepositoryModel.dummy
+    public init(repositoryList: @escaping (String) async throws -> [GitHubRepositoryResponse]) {
+        self.repositoryList = repositoryList
     }
+
+    var repositoryList: (_ keyword: String) async throws -> [GitHubRepositoryResponse]
 }

@@ -6,50 +6,39 @@
 //
 
 import Foundation
+import Core
 
-public enum APIError: Error {
-    case invalidURL
-    case responseError
-    case parseError(Error)
-}
-
-public enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-}
-
-public protocol APIClientProtocol {
-
-    func perform<T: Decodable>(method: HTTPMethod, url: String?) async throws -> T
-
-    func perform(method: HTTPMethod, url: String?) async throws -> Data
-}
-
-extension APIClientProtocol {
-
-    public func perform<T: Decodable>(method: HTTPMethod, url: String?) async throws -> T {
-        let data = try await perform(method: method, url: url)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(T.self, from: data)
+public final class APIClient {
+    public init(baseURL: URL, urlSessionConfiguration: URLSessionConfiguration = .default) {
+        self.baseURL = baseURL
+        self.urlSession = URLSession(configuration: urlSessionConfiguration)
     }
-}
 
-public class APIClient: APIClientProtocol {
+    public let baseURL: URL
+    let urlSession: URLSession
 
-    public init() {}
-
-    public func perform(method: HTTPMethod, url: String?) async throws -> Data {
-        guard let urlString = url, let url = URL(string: urlString) else {
-            throw APIError.invalidURL
+    /// - throws: `APIClient.Error`.
+    @usableFromInline
+    func send(_ urlRequest: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        do {
+            let (data, urlResponse) = try await urlSession.data(for: urlRequest)
+            return (data, urlResponse as! HTTPURLResponse)
+        } catch let error as URLError {
+            throw Error.urlSession(error)
+        } catch {
+            throw Error.unknown(error)
         }
+    }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        return data
+    /// - throws: `APIClient.Error`.
+    @inlinable
+    public func send<S>(_ request: some Request<S>) async throws -> Response<S> {
+        do {
+            let urlRequest = try request.makeURLRequest(baseURL: baseURL)
+            let (data, urlResponse) = try await send(urlRequest)
+            return request.response(from: data, urlResponse: urlResponse)
+        } catch let error as RequestError {
+            throw Error.request(error)
+        }
     }
 }

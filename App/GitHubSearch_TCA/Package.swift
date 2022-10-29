@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "AppKit", targets: ["AppKit"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "AppUI", targets: ["AppUI"]),
+        .library(name: "Core", targets: ["Core"]),
         .library(name: "DataSource", targets: ["DataSource"]),
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
     ],
@@ -40,7 +41,11 @@ let package = Package(
 //                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
             ]
         ),
-        .target(name: "DataSource"),
+        .target(name: "Core"),
+        .target(name: "DataSource",
+                dependencies: [
+                    "Core",
+                ]),
         .target(
             name: "SearchFeature",
             dependencies: [
