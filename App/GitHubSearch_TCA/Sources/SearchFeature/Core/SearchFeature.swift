@@ -6,19 +6,20 @@
 //
 
 import ComposableArchitecture
+import DataSource
 import Foundation
 
 public struct ListState: Equatable {
     public init() {}
     var keyword = ""
-    var repositoryList: [GitHubRepositoryModel] = []
+    var repositoryList: [GitHubRepositoryResponse] = []
     var isLoading = false
 }
 
 public enum ListAction: Equatable {
     case keywordChanged(String)
     case fetchRepositoryList
-    case repositoryListResponse(TaskResult<[GitHubRepositoryModel]>)
+    case repositoryListResponse(TaskResult<[GitHubRepositoryResponse]>)
 }
 
 public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { state, action, environment in

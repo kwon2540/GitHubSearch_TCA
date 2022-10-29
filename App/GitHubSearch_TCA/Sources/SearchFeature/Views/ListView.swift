@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import DataSource
 import SwiftUI
 
 public struct ListView: View {
@@ -124,13 +125,11 @@ struct ListView_Previews: PreviewProvider {
     }
     
     private struct Preview: View {
-        @State var repositoryList = GitHubRepositoryModel.dummy
-        @State var keyword = ""
         
         var body: some View {
             ListView(store: Store(initialState: .init(),
                                   reducer: listReducer,
-                                  environment: .init()))
+                                  environment: .init(apiClient: APIClient())))
         }
     }
 }
