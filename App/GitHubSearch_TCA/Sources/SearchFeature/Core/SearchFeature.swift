@@ -5,6 +5,7 @@
 //  Created by クォン ジュンヒョク on 2022/10/01.
 //
 
+import Core
 import ComposableArchitecture
 import DataSource
 import Foundation
@@ -12,14 +13,14 @@ import Foundation
 public struct ListState: Equatable {
     public init() {}
     var keyword = ""
-    var repositoryList: [GitHubRepositoryResponse] = []
+    var repositoryList: [ResponseValues.GitHubRepositoryResponse] = []
     var isLoading = false
 }
 
 public enum ListAction: Equatable {
     case keywordChanged(String)
     case fetchRepositoryList
-    case repositoryListResponse(TaskResult<[GitHubRepositoryResponse]>)
+    case repositoryListResponse(TaskResult<[ResponseValues.GitHubRepositoryResponse]>)
 }
 
 public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { state, action, environment in

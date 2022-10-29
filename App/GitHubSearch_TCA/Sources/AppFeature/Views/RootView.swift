@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Core
 import DataSource
 import SwiftUI
 import SearchFeature
@@ -22,7 +23,7 @@ public struct RootView: View {
             environment: SearchEnvironment(repositoryList: { _ in
                 try await Task.sleep(nanoseconds: NSEC_PER_SEC)
                 return [
-                    GitHubRepositoryResponse(id: "1",
+                    ResponseValues.GitHubRepositoryResponse(id: "1",
                                              name: "Swift",
                                              fullName: "maharjan binish",
                                              owner: .init(id: "1", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
@@ -30,7 +31,7 @@ public struct RootView: View {
                                              description: "description",
                                              language: "swift",
                                              stargazersCount: "1000"),
-                    GitHubRepositoryResponse(id: "2",
+                    ResponseValues.GitHubRepositoryResponse(id: "2",
                                              name: "Java",
                                              fullName: "kwon junhyeok",
                                              owner: .init(id: "2", login: "kwon junhyeok", avatarUrl: URL(string: "https://picsum.photos/80/80")!),
@@ -38,7 +39,7 @@ public struct RootView: View {
                                              description: "description",
                                              language: "Java",
                                              stargazersCount: "1000"),
-                    GitHubRepositoryResponse(id: "3",
+                    ResponseValues.GitHubRepositoryResponse(id: "3",
                                              name: "kotlin",
                                              fullName: "maharjan binish",
                                              owner: .init(id: "3", login: "maharjan binish", avatarUrl: URL(string: "https://picsum.photos/80/80")!),

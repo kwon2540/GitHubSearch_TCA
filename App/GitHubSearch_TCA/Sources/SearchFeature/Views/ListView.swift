@@ -129,7 +129,7 @@ struct ListView_Previews: PreviewProvider {
         var body: some View {
             ListView(store: Store(initialState: .init(),
                                   reducer: listReducer,
-                                  environment: .init(apiClient: APIClient())))
+                                  environment: .unimplemented))
         }
     }
 }
