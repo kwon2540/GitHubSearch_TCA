@@ -13,14 +13,14 @@ import Foundation
 public struct ListState: Equatable {
     public init() {}
     var keyword = ""
-    var repositoryList: [ResponseValues.GitHubRepositoryResponse] = []
+    var repositoryList: [ResponseValues.GitHubRepositoryResponse.GitHubRepository] = []
     var isLoading = false
 }
 
 public enum ListAction: Equatable {
     case keywordChanged(String)
     case fetchRepositoryList
-    case repositoryListResponse(TaskResult<[ResponseValues.GitHubRepositoryResponse]>)
+    case repositoryListResponse(TaskResult<ResponseValues.GitHubRepositoryResponse>)
 }
 
 public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { state, action, environment in
@@ -39,7 +39,7 @@ public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { sta
             )
         }
     case .repositoryListResponse(.success(let response)):
-        state.repositoryList = response
+        state.repositoryList = response.items
     case .repositoryListResponse(.failure):
         // TODO: Error Handling
         break

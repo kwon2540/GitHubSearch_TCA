@@ -11,11 +11,11 @@ import Foundation
 
 public struct SearchEnvironment {
 
-    public init(repositoryList: @escaping (String) async throws -> [ResponseValues.GitHubRepositoryResponse]) {
+    public init(repositoryList: @escaping (String) async throws -> ResponseValues.GitHubRepositoryResponse) {
         self.repositoryList = repositoryList
     }
 
-    var repositoryList: (_ keyword: String) async throws -> [ResponseValues.GitHubRepositoryResponse]
+    var repositoryList: (_ keyword: String) async throws -> ResponseValues.GitHubRepositoryResponse
 }
 
 #if DEBUG
