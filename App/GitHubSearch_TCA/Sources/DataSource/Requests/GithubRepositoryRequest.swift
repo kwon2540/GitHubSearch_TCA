@@ -8,7 +8,7 @@
 import Core
 import Foundation
 
-public struct GithubRepositoryRequest {
+public struct GithubRepositoryRequest: Request, Codable {
 
     public typealias Success = ResponseValues.GitHubRepositoryResponse
 

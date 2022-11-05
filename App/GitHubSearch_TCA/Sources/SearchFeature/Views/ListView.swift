@@ -19,27 +19,29 @@ public struct ListView: View {
     
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 16) {
-                SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
+            ScrollView {
+                VStack(spacing: 16) {
+                    SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
 
-                ForEach(viewStore.repositoryList) { repository in
-                    ListItem(imageUrl: repository.owner.avatarUrl,
-                             title: repository.name,
-                             userName: repository.owner.login,
-                             language: repository.language ?? "",
-                             stargazersCount: repository.stargazersCount)
+                    ForEach(viewStore.repositoryList, id: \.self) { repository in
+                        ListItem(imageUrl: repository.owner.avatarUrl,
+                                 title: repository.name,
+                                 userName: repository.owner.login,
+                                 language: repository.language ?? "",
+                                 stargazersCount: repository.stargazersCount)
+                    }
+
+                    Spacer()
                 }
-
-                Spacer()
+                .padding(16)
             }
-            .padding(16)
             .background {
                 if viewStore.isLoading {
                     ProgressView()
                         .progressViewStyle(.circular)
                 }
             }
-        }
+            .ignoresSafeArea(edges: .bottom)        }
     }
 }
 
@@ -80,7 +82,7 @@ private struct ListItem: View {
     var title: String
     var userName: String
     var language: String
-    var stargazersCount: String
+    var stargazersCount: Int
     
     var body: some View {
         HStack(spacing: 16) {
@@ -109,7 +111,7 @@ private struct ListItem: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
                     
-                    Text(stargazersCount)
+                    Text(String(stargazersCount))
                         .font(.subheadline)
                 }
             }
@@ -129,7 +131,7 @@ struct ListView_Previews: PreviewProvider {
         var body: some View {
             ListView(store: Store(initialState: .init(),
                                   reducer: listReducer,
-                                  environment: .init(apiClient: APIClient())))
+                                  environment: .unimplemented))
         }
     }
 }

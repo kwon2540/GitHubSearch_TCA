@@ -8,20 +8,26 @@
 import Foundation
 
 extension ResponseValues {
-    
-    public struct GitHubRepositoryResponse: Codable, Identifiable {
 
-        public let id: String
+    public struct GitHubRepositoryResponse: Codable, Hashable {
+
+        public let items: [GitHubRepository]
+    }
+}
+
+extension ResponseValues.GitHubRepositoryResponse {
+
+    public struct GitHubRepository: Codable, Hashable {
+
         public let name: String
         public let fullName: String
         public let owner: Owner
         public let htmlUrl: URL
         public let description: String?
         public let language: String?
-        public let stargazersCount: String
+        public let stargazersCount: Int
 
-        public init(id: String, name: String, fullName: String, owner: Owner, htmlUrl: URL, description: String?, language: String?, stargazersCount: String) {
-            self.id = id
+        public init(name: String, fullName: String, owner: Owner, htmlUrl: URL, description: String?, language: String?, stargazersCount: Int) {
             self.name = name
             self.fullName = fullName
             self.owner = owner
@@ -31,24 +37,15 @@ extension ResponseValues {
             self.stargazersCount = stargazersCount
         }
 
-        public struct Owner: Codable {
+        public struct Owner: Codable, Hashable {
 
-            public let id: String
             public let login: String
             public let avatarUrl: URL
 
-            public init(id: String, login: String, avatarUrl: URL) {
-                self.id = id
+            public init(login: String, avatarUrl: URL) {
                 self.login = login
                 self.avatarUrl = avatarUrl
             }
         }
-    }
-}
-
-extension ResponseValues.GitHubRepositoryResponse: Equatable {
-
-    public static func == (lhs: ResponseValues.GitHubRepositoryResponse, rhs: ResponseValues.GitHubRepositoryResponse) -> Bool {
-        lhs.id == rhs.id
     }
 }
