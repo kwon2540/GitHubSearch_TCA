@@ -1,5 +1,5 @@
 //
-//  SearchFeature.swift
+//  ListFeature.swift
 //  
 //
 //  Created by クォン ジュンヒョク on 2022/10/01.

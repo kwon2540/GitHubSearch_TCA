@@ -19,12 +19,15 @@ let package = Package(
     dependencies: [
 //        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.40.2"),
+        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", exact: "4.2.2"),
     ],
     targets: [
         .target(
             name: "AppKit",
             dependencies: [
                 "AppFeature",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "KeychainAccess", package: "KeychainAccess"),
             ]),
         .target(
             name: "AppFeature",
