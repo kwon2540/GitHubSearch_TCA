@@ -24,11 +24,15 @@ public struct ListContentView: View {
                     SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
 
                     ForEach(viewStore.repositoryList, id: \.self) { repository in
-                        ListItem(imageUrl: repository.owner.avatarUrl,
-                                 title: repository.name,
-                                 userName: repository.owner.login,
-                                 language: repository.language ?? "",
-                                 stargazersCount: repository.stargazersCount)
+                        Button {
+                            viewStore.send(.repositoryItemTapped(url: repository.htmlUrl, title: repository.name))
+                        } label: {
+                            ListItem(imageUrl: repository.owner.avatarUrl,
+                                     title: repository.name,
+                                     userName: repository.owner.login,
+                                     language: repository.language ?? "",
+                                     stargazersCount: repository.stargazersCount)
+                        }
                     }
 
                     Spacer()
@@ -41,7 +45,12 @@ public struct ListContentView: View {
                         .progressViewStyle(.circular)
                 }
             }
-            .ignoresSafeArea(edges: .bottom)        }
+            .ignoresSafeArea(edges: .bottom)
+            .alert(store.scope(state: \.alertState, action: ListAction.alertAction), dismiss: .onDismiss)
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
+        }
     }
 }
 

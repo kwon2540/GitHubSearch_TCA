@@ -44,5 +44,21 @@ private final class ListViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+//        store.scope(state: \.detailState, action: ListAction.detailAction)
+//            .ifLet { [weak self] store in
+//                self?.pushViewController(UIHostingController(rootView: DetailView(store: store)), animated: true)
+//            }
+//            .store(in: &cancellable)
+
+        viewStore
+            .publisher
+            .detail
+            .sink { [weak self] detail in
+                if let detail {
+                    self?.pushViewController(UIHostingController(rootView: DetailView(url: detail.url, title: detail.title)), animated: true)
+                }
+            }
+            .store(in: &cancellable)
     }
 }
