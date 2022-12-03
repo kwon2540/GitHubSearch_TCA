@@ -2,138 +2,63 @@
 //  ListView.swift
 //  
 //
-//  Created by クォン ジュンヒョク on 2022/08/20.
+//  Created by クォン ジュンヒョク on 2022/12/03.
 //
 
+import Combine
 import ComposableArchitecture
-import DataSource
+import Foundation
 import SwiftUI
+import UIKit
 
-public struct ListView: View {
-
+public struct ListView: UIViewControllerRepresentable {
     public init(store: Store<ListState, ListAction>) {
         self.store = store
     }
 
     let store: Store<ListState, ListAction>
-    
-    public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            ScrollView {
-                VStack(spacing: 16) {
-                    SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
 
-                    ForEach(viewStore.repositoryList, id: \.self) { repository in
-                        ListItem(imageUrl: repository.owner.avatarUrl,
-                                 title: repository.name,
-                                 userName: repository.owner.login,
-                                 language: repository.language ?? "",
-                                 stargazersCount: repository.stargazersCount)
-                    }
+    public func makeUIViewController(context: Context) -> UIViewController {
+        ListViewController(store: store)
+    }
 
-                    Spacer()
-                }
-                .padding(16)
-            }
-            .background {
-                if viewStore.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
-            }
-            .ignoresSafeArea(edges: .bottom)
-            .alert(store.scope(state: \.alertState, action: ListAction.alertAction), dismiss: .onDismiss)
-        }
+    public func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 }
 
-private struct SearchBar: View {
-    
-    @Binding var keyword: String
-    
-    var body: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-            
-            TextField("", text: $keyword)
-            
-            if !keyword.isEmpty {
-                Button {
-                    keyword.removeAll()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+private final class ListViewController: UINavigationController {
+    init(store: Store<ListState, ListAction>) {
+        self.store = store
+        let contentView = ListContentView(store: store)
+        super.init(rootViewController: UIHostingController(rootView: contentView))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private let store: Store<ListState, ListAction>
+    private lazy var viewStore = ViewStore(store)
+
+    private var cancellable = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+//        store.scope(state: \.detailState, action: ListAction.detailAction)
+//            .ifLet { [weak self] store in
+//                self?.pushViewController(UIHostingController(rootView: DetailView(store: store)), animated: true)
+//            }
+//            .store(in: &cancellable)
+
+        viewStore
+            .publisher
+            .detail
+            .sink { [weak self] detail in
+                if let detail {
+                    self?.pushViewController(UIHostingController(rootView: DetailView(url: detail.url, title: detail.title)), animated: true)
                 }
             }
-        }
-        .frame(height: 48)
-        .padding(.horizontal, 12)
-        .cornerRadius(8)
-        .background(Color.white)
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(Color(uiColor: .lightGray), lineWidth: 2)
-        }
-    }
-}
-
-private struct ListItem: View {
-    
-    var imageUrl: URL
-    var title: String
-    var userName: String
-    var language: String
-    var stargazersCount: Int
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            AsyncImage(url: imageUrl) { image in
-                image.resizable().scaledToFit()
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 80, height: 80)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                Text(userName)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Text(language)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                HStack(spacing: 2) {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    
-                    Text(String(stargazersCount))
-                        .font(.subheadline)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
-}
-
-struct ListView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        Preview()
-    }
-    
-    private struct Preview: View {
-        
-        var body: some View {
-            ListView(store: Store(initialState: .init(),
-                                  reducer: listReducer,
-                                  environment: .unimplemented))
-        }
+            .store(in: &cancellable)
     }
 }

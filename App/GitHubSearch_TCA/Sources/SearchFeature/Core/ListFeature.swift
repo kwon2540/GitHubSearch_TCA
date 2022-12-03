@@ -16,13 +16,18 @@ public struct ListState: Equatable {
     var repositoryList: [ResponseValues.GitHubRepositoryResponse.GitHubRepository] = []
     var isLoading = false
 
+    var detail: Detail?
+
     var alertState: AlertState<ListAction.AlertAction>?
 }
 
 public enum ListAction: Equatable {
+    case onAppear
     case keywordChanged(String)
     case fetchRepositoryList
     case repositoryListResponse(TaskResult<ResponseValues.GitHubRepositoryResponse>)
+
+    case repositoryItemTapped(url: URL, title: String)
 
     case alertAction(AlertAction)
 
@@ -34,6 +39,9 @@ public enum ListAction: Equatable {
 public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { state, action, environment in
     enum FetchId {}
     switch action {
+    case .onAppear:
+        state.detail = nil
+
     case .keywordChanged(let keyword):
         state.keyword = keyword
 
@@ -56,6 +64,9 @@ public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { sta
 
     case .repositoryListResponse(.failure(let error)):
         state.alertState = AlertState(title: TextState(error.localizedDescription))
+
+    case .repositoryItemTapped(let url, let title):
+        state.detail = Detail(url: url, title: title)
 
     case .alertAction(.onDismiss):
         state.alertState = nil
