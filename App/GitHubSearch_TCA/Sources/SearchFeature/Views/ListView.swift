@@ -41,7 +41,9 @@ public struct ListView: View {
                         .progressViewStyle(.circular)
                 }
             }
-            .ignoresSafeArea(edges: .bottom)        }
+            .ignoresSafeArea(edges: .bottom)
+            .alert(store.scope(state: \.alertState, action: ListAction.alertAction), dismiss: .onDismiss)
+        }
     }
 }
 
