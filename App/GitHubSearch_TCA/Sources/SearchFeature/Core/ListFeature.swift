@@ -24,12 +24,16 @@ public enum ListAction: Equatable {
 }
 
 public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { state, action, environment in
+    enum FetchId {}
     switch action {
     case .keywordChanged(let keyword):
         state.keyword = keyword
+
         return .init(value: .fetchRepositoryList)
             .delay(for: 1, scheduler: DispatchQueue.main)
             .eraseToEffect()
+            .cancellable(id: FetchId.self, cancelInFlight: true)
+
     case .fetchRepositoryList:
         return .task { [state] in
             await .repositoryListResponse(
@@ -38,6 +42,7 @@ public let listReducer = Reducer<ListState, ListAction, SearchEnvironment> { sta
                 }
             )
         }
+
     case .repositoryListResponse(.success(let response)):
         state.repositoryList = response.items
     case .repositoryListResponse(.failure):
