@@ -39,29 +39,3 @@ public struct AppReducer: ReducerProtocol {
         }
     }
 }
-
-
-
-//public struct AppState: Equatable {
-//
-//    public init() {}
-//
-//    var listState = ListState()
-//}
-//
-//public enum AppAction: Equatable {
-//    case listAction(ListAction)
-//}
-//
-//public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
-//    listReducer
-//        .pullback(state: \.listState, action: /AppAction.listAction, environment: \.searchEnvironment),
-//    Reducer { state, action, environment in
-//        switch action {
-//        case .listAction:
-//            break
-//        }
-//
-//        return .none
-//    }
-//)
