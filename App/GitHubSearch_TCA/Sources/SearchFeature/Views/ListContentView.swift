@@ -11,17 +11,17 @@ import SwiftUI
 
 public struct ListContentView: View {
 
-    public init(store: Store<ListState, ListAction>) {
+    public init(store: StoreOf<ListReducer>) {
         self.store = store
     }
 
-    let store: Store<ListState, ListAction>
+    let store: StoreOf<ListReducer>
     
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             ScrollView {
                 VStack(spacing: 16) {
-                    SearchBar(keyword: viewStore.binding(get: \.keyword, send: ListAction.keywordChanged))
+                    SearchBar(keyword: viewStore.binding(\.$keyword))
 
                     ForEach(viewStore.repositoryList, id: \.self) { repository in
                         Button {
@@ -46,7 +46,7 @@ public struct ListContentView: View {
                 }
             }
             .ignoresSafeArea(edges: .bottom)
-            .alert(store.scope(state: \.alertState, action: ListAction.alertAction), dismiss: .onDismiss)
+            .alert(store.scope(state: \.alertState, action: ListReducer.Action.alertAction), dismiss: .onDismiss)
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -138,9 +138,10 @@ struct ListView_Previews: PreviewProvider {
     private struct Preview: View {
         
         var body: some View {
-            ListContentView(store: Store(initialState: .init(),
-                                         reducer: listReducer,
-                                         environment: .unimplemented))
+            ListContentView(store: Store(
+                initialState: .init(),
+                reducer: ListReducer(environment: .unimplemented)
+            ))
         }
     }
 }

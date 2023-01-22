@@ -9,6 +9,7 @@ import DataSource
 import Foundation
 import KeychainAccess
 import SearchFeature
+import ComposableArchitecture
 
 extension SearchEnvironment {
     static func live(apiClient: APIClient, keychain: Keychain, userDefaults: UserDefaults) -> Self {

@@ -13,13 +13,13 @@ import SearchFeature
 
 public struct RootView: View {
 
-    public init(store: Store<AppState, AppAction>) {
+    public init(store: StoreOf<AppReducer>) {
         self.store = store
     }
 
-    let store: Store<AppState, AppAction>
+    let store: StoreOf<AppReducer>
 
     public var body: some View {
-        ListView(store: store.scope(state: \.listState, action: AppAction.listAction))
+        ListView(store: store.scope(state: \.listState, action: AppReducer.Action.listAction))
     }
 }
