@@ -9,26 +9,33 @@ import ComposableArchitecture
 import Foundation
 import SearchFeature
 
-public struct AppState: Equatable {
-
-    public init() {}
-
-    var listState = ListState()
-}
-
-public enum AppAction: Equatable {
-    case listAction(ListAction)
-}
-
-public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
-    listReducer
-        .pullback(state: \.listState, action: /AppAction.listAction, environment: \.searchEnvironment),
-    Reducer { state, action, environment in
-        switch action {
-        case .listAction:
-            break
-        }
-
-        return .none
+public struct AppReducer: ReducerProtocol {
+    public struct State {
+        var listState = ListReducer.State()
+        
+        public init() {}
     }
-)
+    
+    public enum Action {
+        case listAction(ListReducer.Action)
+    }
+    
+    var appEnvironment: AppEnvironment
+    
+    public init(appEnvironment: AppEnvironment) {
+        self.appEnvironment = appEnvironment
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .listAction:
+                return .none
+            }
+        }
+        
+        Scope(state: \.listState, action: /Action.listAction) {
+            ListReducer(environment: appEnvironment.searchEnvironment)
+        }
+    }
+}

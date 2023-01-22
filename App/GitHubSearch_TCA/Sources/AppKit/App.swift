@@ -10,8 +10,8 @@ import SwiftUI
 import AppFeature
 
 public final class AppDelegate: NSObject, UIApplicationDelegate {
-    private var store: Store<AppState, AppAction>?
-    func store(for primitiveEnvironment: PrimitiveEnvironment) -> Store<AppState, AppAction> {
+    private var store: StoreOf<AppReducer>?
+    func store(for primitiveEnvironment: PrimitiveEnvironment) -> StoreOf<AppReducer> {
         if let store = store {
             return store
         }

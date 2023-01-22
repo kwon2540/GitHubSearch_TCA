@@ -12,11 +12,11 @@ import SwiftUI
 import UIKit
 
 public struct ListView: UIViewControllerRepresentable {
-    public init(store: Store<ListState, ListAction>) {
+    public init(store: StoreOf<ListReducer>) {
         self.store = store
     }
 
-    let store: Store<ListState, ListAction>
+    let store: StoreOf<ListReducer>
 
     public func makeUIViewController(context: Context) -> UIViewController {
         ListViewController(store: store)
@@ -27,7 +27,7 @@ public struct ListView: UIViewControllerRepresentable {
 }
 
 private final class ListViewController: UINavigationController {
-    init(store: Store<ListState, ListAction>) {
+    init(store: StoreOf<ListReducer>) {
         self.store = store
         let contentView = ListContentView(store: store)
         super.init(rootViewController: UIHostingController(rootView: contentView))
@@ -37,7 +37,7 @@ private final class ListViewController: UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private let store: Store<ListState, ListAction>
+    private let store: StoreOf<ListReducer>
     private lazy var viewStore = ViewStore(store)
 
     private var cancellable = Set<AnyCancellable>()
