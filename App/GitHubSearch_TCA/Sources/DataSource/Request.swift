@@ -76,7 +76,7 @@ extension Request {
             urlRequest.httpBody = try body.encode()
             urlRequest.setValue(body.contentType, forHTTPHeaderField: "Content-Type")
         } catch {
-            throw RequestError.requestBodyEncodingFailed(error)
+            throw RequestError.requestBodyEncodingFailed(error as NSError)
         }
 
         return urlRequest

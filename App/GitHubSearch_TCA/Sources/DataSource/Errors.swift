@@ -2,26 +2,26 @@ import Foundation
 import Core
 
 extension APIClient {
-    public enum Error: Swift.Error {
+    public enum Error: Swift.Error, Equatable {
         case request(RequestError)
         case urlSession(URLError)
-        case unknown(Swift.Error)
+        case unknown(NSError)
     }
 }
 
 // MARK: -
 
-public enum RequestError: Error {
+public enum RequestError: Error, Equatable {
     case invalidBaseURL(URL)
-    case requestBodyEncodingFailed(Error)
+    case requestBodyEncodingFailed(NSError)
 }
 
 // MARK: -
 
 /// - remark: ``Response``はジェネリックパラメータを持っているため、エラーをinner enumにすると利用側で取り回しが悪くなってしまう。
-public enum ResponseError: Error {
+public enum ResponseError: Error, Equatable  {
     case api(APIError)
-    case decoding(Error)
+    case decoding(NSError)
 }
 
 extension ResponseError: LocalizedError {
