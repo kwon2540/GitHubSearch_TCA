@@ -9,11 +9,13 @@ final class ListFeatureTests: XCTestCase {
 
     var state = ListReducer.State()
     var environment = SearchEnvironment.unimplemented
+    var clock = TestClock()
 
     override func setUp() {
         super.setUp()
         state = ListReducer.State()
         environment = SearchEnvironment.unimplemented
+        clock = TestClock()
     }
 
     func testOnAppear() async {
@@ -101,28 +103,63 @@ final class ListFeatureTests: XCTestCase {
     }
 
     func testSearchBinding() async {
-        let aState = ListReducer.State()
         let error = ResponseError.api(.init(code: "-1", errorDescription: "error"))
+        let keyword = "swift"
 
-        environment.repositoryList = { keyword in
-            XCTAssertEqual(aState.keyword, keyword) // TODO: Why state.keyword is empty ???
+        environment.repositoryList = { receivedKeyword in
+            XCTAssertEqual(keyword, receivedKeyword)
             throw error
         }
 
         // below v16.0
 //        let mainQueue = DispatchQueue.test
 //        await mainQueue.advance(by: .seconds(1))
-        let clock = TestClock()
         let store = TestStore(
-            initialState: aState,
+            initialState: state,
             reducer: ListReducer(environment: environment)
         ) {
             $0.continuousClock = clock
         }
 
-        let keyword = "swift"
         await store.send(.binding(.set(\.$keyword, keyword))) {
             $0.keyword = keyword
+        }
+
+        await clock.advance(by: .seconds(1))
+        await store.receive(.fetchRepositoryList) {
+            $0.isLoading = true
+        }
+
+        await store.receive(.repositoryListResponse(.failure(error))) {
+            $0.isLoading = false
+            $0.alertState = AlertState(title: TextState(error.localizedDescription))
+        }
+    }
+
+    func testSearchDebounceForSecond() async {
+        let error = ResponseError.api(.init(code: "-1", errorDescription: "error"))
+        let keyword1 = "swift"
+        let keyword2 = "swifts"
+
+        environment.repositoryList = { receivedKeyword in
+            // because textField has 1 second debounce, repository will receive keyword as result.
+            XCTAssertEqual(keyword2, receivedKeyword)
+            throw error
+        }
+
+        let store = TestStore(
+            initialState: state,
+            reducer: ListReducer(environment: environment)
+        ) {
+            $0.continuousClock = clock
+        }
+
+        await store.send(.binding(.set(\.$keyword, keyword1))) {
+            $0.keyword = keyword1
+        }
+
+        await store.send(.binding(.set(\.$keyword, keyword2))) {
+            $0.keyword = keyword2
         }
 
         await clock.advance(by: .seconds(1))
