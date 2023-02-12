@@ -17,7 +17,7 @@ let package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
     ],
     dependencies: [
-        //        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
+        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.49.2"),
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", exact: "4.2.2"),
     ],
@@ -43,7 +43,7 @@ let package = Package(
                 .process("Resources"),
             ],
             plugins: [
-//              .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
+              .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
             ]
         ),
         .target(name: "Core"),
