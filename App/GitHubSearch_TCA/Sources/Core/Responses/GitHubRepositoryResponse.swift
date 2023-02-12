@@ -12,6 +12,10 @@ extension ResponseValues {
     public struct GitHubRepositoryResponse: Codable, Hashable {
 
         public let items: [GitHubRepository]
+
+        public init(items: [GitHubRepository]) {
+            self.items = items
+        }
     }
 }
 

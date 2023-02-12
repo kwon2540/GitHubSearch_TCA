@@ -25,7 +25,7 @@ extension Response {
             let apiError = try jsonDecoder.decode(APIError.self, from: data)
             return Self.init(result: .failure(.api(apiError)), urlResponse: urlResponse)
         } catch {
-            return Self.init(result: .failure(.decoding(error)), urlResponse: urlResponse)
+            return Self.init(result: .failure(.decoding(error as NSError)), urlResponse: urlResponse)
         }
     }
 
@@ -42,7 +42,7 @@ extension Response {
             let apiError = try jsonDecoder.decode(APIError.self, from: data)
             return Self.init(result: .failure(.api(apiError)), urlResponse: urlResponse)
         } catch {
-            return Self.init(result: .failure(.decoding(error)), urlResponse: urlResponse)
+            return Self.init(result: .failure(.decoding(error as NSError)), urlResponse: urlResponse)
         }
     }
 }

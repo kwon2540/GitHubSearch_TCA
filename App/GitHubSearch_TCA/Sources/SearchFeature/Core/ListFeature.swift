@@ -39,6 +39,7 @@ public struct ListReducer: ReducerProtocol {
     }
     
     var environment: SearchEnvironment
+    @Dependency(\.continuousClock) var clock
     
     public init(environment: SearchEnvironment) {
         self.environment = environment
@@ -83,10 +84,16 @@ public struct ListReducer: ReducerProtocol {
                     break
                 }
 
-                return .init(value: .fetchRepositoryList)
-                    .delay(for: 1, scheduler: DispatchQueue.main)
-                    .eraseToEffect()
-                    .cancellable(id: FetchId.self, cancelInFlight: true)
+                return .run { send in
+                    try await self.clock.sleep(for: .seconds(1))
+                    await send(.fetchRepositoryList)
+                }
+                .cancellable(id: FetchId.self, cancelInFlight: true)
+
+//                return .init(value: .fetchRepositoryList)
+//                    .delay(for: 1, scheduler: DispatchQueue.main)
+//                    .eraseToEffect()
+//                    .cancellable(id: FetchId.self, cancelInFlight: true)
 
             case .binding:
                 break

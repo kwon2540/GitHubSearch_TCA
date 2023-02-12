@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "GitHubSearch_TCA",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
     ],
     products: [
         .library(name: "AppKit", targets: ["AppKit"]),
@@ -17,7 +17,7 @@ let package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
+        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", exact: "6.6.1"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.49.2"),
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", exact: "4.2.2"),
     ],
@@ -28,33 +28,44 @@ let package = Package(
                 "AppFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "KeychainAccess", package: "KeychainAccess"),
-            ]),
+            ]
+        ),
         .target(
             name: "AppFeature",
             dependencies: [
                 "SearchFeature",
                 "DataSource",
-            ]),
+            ]
+        ),
         .target(
             name: "AppUI",
             resources: [
                 .process("Resources"),
             ],
             plugins: [
-//                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
+              .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
             ]
         ),
         .target(name: "Core"),
-        .target(name: "DataSource",
-                dependencies: [
-                    "Core",
-                ]),
+        .target(
+            name: "DataSource",
+            dependencies: [
+                "Core",
+            ]
+        ),
         .target(
             name: "SearchFeature",
             dependencies: [
                 "AppUI",
                 "DataSource",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]),
+            ]
+        ),
+        .testTarget(
+            name: "SearchFeatureTests",
+            dependencies: [
+                "SearchFeature"
+            ]
+        )
     ]
 )

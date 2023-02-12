@@ -26,7 +26,7 @@ public final class APIClient {
         } catch let error as URLError {
             throw Error.urlSession(error)
         } catch {
-            throw Error.unknown(error)
+            throw Error.unknown(error as NSError)
         }
     }
 
